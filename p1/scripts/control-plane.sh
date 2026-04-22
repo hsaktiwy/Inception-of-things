@@ -15,4 +15,4 @@ echo "export KUBECONFIG=/home/vagrant/.kube/config" >> /home/vagrant/.bashrc
 # ---------------------------
 
 # Share the token so the worker node can join
-cp /var/lib/rancher/k3s/server/node-token /vagrant/token
+cp /var/lib/rancher/k3s/server/node-token /vagrant/confs/token

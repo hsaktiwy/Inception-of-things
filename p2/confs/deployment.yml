@@ -1,0 +1,148 @@
+# ==========================================
+# APP 1: 1 Replica
+# ==========================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app1-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app1
+  template:
+    metadata:
+      labels:
+        app: app1
+    spec:
+      containers:
+      - name: web
+        image: nginx:alpine
+        command: ["/bin/sh", "-c", "echo 'app1' > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"]
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app1-svc
+spec:
+  selector:
+    app: app1
+  ports:
+    - port: 80
+      targetPort: 80
+
+# ==========================================
+# APP 2: 3 Replicas (Per the subject)
+# ==========================================
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app2-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app2
+  template:
+    metadata:
+      labels:
+        app: app2
+    spec:
+      containers:
+      - name: web
+        image: nginx:alpine
+        command: ["/bin/sh", "-c", "echo 'app2' > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"]
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app2-svc
+spec:
+  selector:
+    app: app2
+  ports:
+    - port: 80
+      targetPort: 80
+
+# ==========================================
+# APP 3: Default Backend (1 Replica)
+# ==========================================
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app3-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app3
+  template:
+    metadata:
+      labels:
+        app: app3
+    spec:
+      containers:
+      - name: web
+        image: nginx:alpine
+        command: ["/bin/sh", "-c", "echo 'app3' > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"]
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app3-svc
+spec:
+  selector:
+    app: app3
+  ports:
+    - port: 80
+      targetPort: 80
+
+# ==========================================
+# INGRESS: The Router
+# ==========================================
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: main-ingress
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - host: app1.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: app1-svc
+            port:
+              number: 80
+  - host: app2.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: app2-svc
+            port:
+              number: 80
+  - http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: app3-svc
+              port:
+                number: 80
