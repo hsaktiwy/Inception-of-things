@@ -1,3 +1,4 @@
 */confs/token
 */.vagrant
-
+p3/Vagrantfile
+.tmp/
