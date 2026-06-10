@@ -4,16 +4,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app1-deployment
+  name: app-one-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: app1
+      app: app-one
   template:
     metadata:
       labels:
-        app: app1
+        app: app-one
     spec:
       containers:
       - name: web
@@ -25,10 +25,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: app1-svc
+  name: app-one-svc
 spec:
   selector:
-    app: app1
+    app: app-one
   ports:
     - port: 80
       targetPort: 80
@@ -40,16 +40,16 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app2-deployment
+  name: app-two-deployment
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: app2
+      app: app-two
   template:
     metadata:
       labels:
-        app: app2
+        app: app-two
     spec:
       containers:
       - name: web
@@ -61,10 +61,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: app2-svc
+  name: app-two-svc
 spec:
   selector:
-    app: app2
+    app: app-two
   ports:
     - port: 80
       targetPort: 80
@@ -76,16 +76,16 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app3-deployment
+  name: app-three-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: app3
+      app: app-three
   template:
     metadata:
       labels:
-        app: app3
+        app: app-three
     spec:
       containers:
       - name: web
@@ -97,10 +97,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: app3-svc
+  name: app-three-svc
 spec:
   selector:
-    app: app3
+    app: app-three
   ports:
     - port: 80
       targetPort: 80
@@ -124,7 +124,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: app1-svc
+            name: app-one-svc
             port:
               number: 80
   - host: app2.com
@@ -134,7 +134,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: app2-svc
+            name: app-two-svc
             port:
               number: 80
   - http:
@@ -143,6 +143,6 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: app3-svc
+              name: app-three-svc
               port:
                 number: 80
