@@ -1,0 +1,3 @@
+## Resources:
+* Declarative argocd manifest: [https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/](https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/)
+* [argocd-repositories.yaml example](https://argo-cd.readthedocs.io/en/stable/operator-manual/argocd-repositories-yaml/)
