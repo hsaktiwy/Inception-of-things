@@ -16,20 +16,3 @@ K_VER=$(curl -L -s https://dl.k8s.io/release/stable.txt)
 curl -LO "https://dl.k8s.io/release/$K_VER/bin/linux/amd64/kubectl"
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 rm kubectl
-
-echo "4. Setting up K3d Cluster..."
-sudo k3d cluster create MyWellington
-
-echo "5. Setting up Namespaces..."
-sudo kubectl create namespace argocd
-sudo kubectl create namespace dev
-
-echo "6. Deploying ArgoCD Core Engine..."
-sudo kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-
-echo "7. Waiting for ArgoCD Control Plane Components to stabilize..."
-# Fixed the cut-off selector string and added a safe timeout
-sudo kubectl wait --namespace argocd --for=condition=ready pod --selector=app.kubernetes.io/name=argocd-server --timeout=150s
-
-echo "8. Bootstrapping Application via Root Definition..."
-sudo kubectl apply -f /vagrant/confs/bootstrap-app.yaml

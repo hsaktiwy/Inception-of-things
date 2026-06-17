@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/hsaktiwy/Inception-of-things-part3-support
+    repoURL: https://github.com/hsaktiwy/hsaktiwy-ception
     targetRevision: HEAD
     path: confs
   destination:
