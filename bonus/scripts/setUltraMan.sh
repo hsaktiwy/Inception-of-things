@@ -99,6 +99,8 @@ prometheus:
 gitlab-runner:
   install: false
 
+gitlab-exporter:
+  enabled: false
 gitlab:
   webservice:
     minReplicas: 1
@@ -121,6 +123,8 @@ gitlab:
     maxReplicas: 1
     persistence:
       enabled: false
+  gitlab-shell:
+    replicaCount: 1
 EOF
 
 echo "8. Gitlab Installing (Pinned to v10.1.0)..."
