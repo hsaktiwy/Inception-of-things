@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "4. Setting up K3d Cluster..."
 sudo k3d cluster create MyWellingtoni -p "8888:8888@loadbalancer" -p "80:80@loadbalancer" -p "8443:443@loadbalancer" --k3s-arg "--disable=traefik@server:0"
 
@@ -7,16 +9,17 @@ sudo kubectl create namespace dev
 sudo kubectl create namespace gitlab
 
 echo "6. Gitlab Installing..."
-helm repo add gitlab https://charts.gitlab.io/
-helm repo update
+echo "6. Gitlab Installing..."
+sudo helm repo add gitlab https://charts.gitlab.io/
+sudo helm repo update
 
-helm upgrade --install gitlab gitlab/gitlab \
+sudo helm upgrade --install gitlab gitlab/gitlab \
   --namespace gitlab \
   --timeout 600s \
   --set global.edition=ce \
   --set global.hosts.domain=localhost \
   --set global.hosts.https=false \
-  --set certmanager.install=false \
+  --set certmanager-issuer.email=false \
   --set prometheus.install=false \
   --set gitlab-runner.install=false \
   --set gitlab.webservice.minReplicas=1 \
@@ -33,19 +36,13 @@ sudo kubectl apply -n argocd --server-side --force-conflicts -f https://raw.gith
 
 sudo kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
 
-#echo "8. Waiting for ArgoCD Control Plane Components to stabilize..."
-# Fixed the cut-off selector string and added a safe timeout
+echo "8. Waiting for ArgoCD Control Plane Components to stabilize..."
 sudo kubectl wait --namespace argocd --for=condition=ready pod --selector=app.kubernetes.io/name=argocd-server --timeout=900s
 
-echo "9. Bootstrapping Application via Root Definition..."
-#sudo kubectl apply -f confs/bootstrap-app.yaml
+# I REMOVED the kubectl wait for the dev namespace here. 
+# We cannot wait for the app because we haven't pushed the code to GitLab yet!
 
-# Wait for the application pod to be deployed by ArgoCD before forwarding
-
-echo "waiting for willplayground to deploy..."
-sudo kubectl wait --namespace dev --for=condition=ready pod --selector=app=willplayground --timeout=900s
-
-# Extract Passwords
+echo "9. Extracting Passwords..."
 ArgoCDPass=$(sudo kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
 GitLabPass=$(sudo kubectl -n gitlab get secret gitlab-gitlab-initial-root-password -o jsonpath="{.data.password}" | base64 -d)
 
@@ -63,4 +60,4 @@ echo "⚠️ NEXT STEPS REQUIRED:"
 echo "1. Log into http://localhost with the root credentials."
 echo "2. Create a new blank project named 'hsaktiwy-ception'."
 echo "3. Push your repository to this local GitLab instance."
-echo "4. Once the code is in GitLab, run: kubectl apply -f bootstrap-app-bonus.yaml"
+echo "4. Once the code is in GitLab, run: sudo kubectl apply -f confs/bootstrap-app-bonus.yaml"

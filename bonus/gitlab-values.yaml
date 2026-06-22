@@ -1,0 +1,84 @@
+global:
+  edition: ce
+  ingress:
+    enabled: false
+    tls:
+      enabled: false
+    configureCertmanager: false
+  kas:
+    enabled: false
+  psql:
+    host: gitlab-postgresql
+    database: gitlabhq_production
+    username: gitlab
+    password:
+      secret: gitlab-postgresql
+      key: password
+  redis:
+    host: gitlab-redis-master
+    password:
+      enabled: false
+  appConfig:
+    lfs:
+      enabled: false
+    artifacts:
+      enabled: false
+    uploads:
+      enabled: false
+    packages:
+      enabled: false
+
+nginx-ingress:
+  enabled: false
+
+ai-gateway:
+  enabled: false
+
+gitlab-pages:
+  enabled: false
+
+spamcheck:
+  enabled: false
+
+mailroom:
+  enabled: false
+
+installCertmanager: false
+
+certmanager-issuer:
+  email: test@example.com
+
+grafana:
+  enabled: false
+
+registry:
+  enabled: false
+
+prometheus:
+  install: false
+
+gitlab-runner:
+  install: false
+
+gitlab:
+  webservice:
+    minReplicas: 1
+    maxReplicas: 1
+    resources:
+      requests:
+        memory: 600Mi
+        cpu: 200m
+  sidekiq:
+    minReplicas: 1
+    maxReplicas: 1
+    resources:
+      requests:
+        memory: 200Mi
+        cpu: 100m
+  toolbox:
+    enabled: false
+  gitaly:
+    minReplicas: 1
+    maxReplicas: 1
+    persistence:
+      enabled: false
