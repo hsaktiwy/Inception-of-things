@@ -60,6 +60,8 @@ prometheus:
 gitlab-runner:
   install: false
 
+gitlab-exporter:
+  enabled: false
 gitlab:
   webservice:
     minReplicas: 1
@@ -82,3 +84,5 @@ gitlab:
     maxReplicas: 1
     persistence:
       enabled: false
+  gitlab-shell:
+    replicaCount: 1

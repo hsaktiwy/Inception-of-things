@@ -124,7 +124,8 @@ gitlab:
     persistence:
       enabled: false
   gitlab-shell:
-    replicaCount: 1
+    minReplicas: 1
+    maxReplicas: 1
 EOF
 
 echo "8. Gitlab Installing (Pinned to v10.1.0)..."
