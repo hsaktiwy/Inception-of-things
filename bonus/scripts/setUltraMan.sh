@@ -36,103 +36,6 @@ echo "   -> Waiting for databases to initialize..."
 sudo kubectl wait --namespace gitlab --for=condition=ready pod --selector=app.kubernetes.io/name=postgresql --timeout=300s
 sudo kubectl wait --namespace gitlab --for=condition=ready pod --selector=app.kubernetes.io/name=redis --timeout=300s
 
-echo "7. Creating GitLab v10.1.0 Values File..."
-cat <<EOF > gitlab-values.yaml
-global:
-  edition: ce
-  ingress:
-    enabled: false
-    tls:
-      enabled: false
-    configureCertmanager: false
-  kas:
-    enabled: false
-  psql:
-    host: gitlab-postgresql
-    database: gitlabhq_production
-    username: gitlab
-    password:
-      secret: gitlab-postgresql
-      key: password
-  redis:
-    host: gitlab-redis-master
-    password:
-      enabled: false
-    livenessProbe:
-      initialDelaySeconds: 120
-    readinessProbe:
-      initialDelaySeconds: 120
-  appConfig:
-    lfs:
-      enabled: false
-    artifacts:
-      enabled: false
-    uploads:
-      enabled: false
-    packages:
-      enabled: false
-
-nginx-ingress:
-  enabled: false
-
-ai-gateway:
-  enabled: false
-
-gitlab-pages:
-  enabled: false
-
-spamcheck:
-  enabled: false
-
-mailroom:
-  enabled: false
-
-installCertmanager: false
-
-certmanager-issuer:
-  email: test@example.com
-
-grafana:
-  enabled: false
-
-registry:
-  enabled: false
-
-prometheus:
-  install: false
-
-gitlab-runner:
-  install: false
-
-gitlab-exporter:
-  enabled: false
-gitlab:
-  webservice:
-    minReplicas: 1
-    maxReplicas: 1
-    resources:
-      requests:
-        memory: 600Mi
-        cpu: 200m
-  sidekiq:
-    minReplicas: 1
-    maxReplicas: 1
-    resources:
-      requests:
-        memory: 200Mi
-        cpu: 100m
-  toolbox:
-    enabled: false
-  gitaly:
-    minReplicas: 1
-    maxReplicas: 1
-    persistence:
-      enabled: false
-  gitlab-shell:
-    minReplicas: 1
-    maxReplicas: 1
-EOF
-
 echo "8. Gitlab Installing (Pinned to v10.1.0)..."
 sudo helm repo add gitlab https://charts.gitlab.io/
 sudo helm repo update
@@ -141,10 +44,10 @@ sudo helm upgrade --install gitlab gitlab/gitlab \
   --namespace gitlab \
   --timeout 1800s \
   --version 10.1.0 \
-  -f gitlab-values.yaml
+  -f confs/gitlab-values.yaml
 
 echo "8.1 Waiting for GitLab Webservice to stabilize (This can take up to 30 minutes on local VMs)..."
-sudo kubectl wait --namespace gitlab --for=condition=ready pod --selector=app.kubernetes.io/name=webservice --timeout=1800s
+sudo kubectl wait --namespace gitlab --for=condition=ready pod --selector=app.kubernetes.io/name=webservice --timeout=3600s
 
 echo "9. Deploying ArgoCD Core Engine..."
 sudo kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
