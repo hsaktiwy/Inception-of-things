@@ -29,8 +29,9 @@ sudo helm upgrade --install gitlab-redis bitnami/redis \
   --namespace gitlab \
   --set architecture=standalone \
   --set auth.enabled=false \
-  --set master.persistence.enabled=false
-
+  --set master.persistence.enabled=false \
+  --set master.livenessProbe.initialDelaySeconds=120 \
+  --set master.readinessProbe.initialDelaySeconds=120
 echo "   -> Waiting for databases to initialize..."
 sudo kubectl wait --namespace gitlab --for=condition=ready pod --selector=app.kubernetes.io/name=postgresql --timeout=300s
 sudo kubectl wait --namespace gitlab --for=condition=ready pod --selector=app.kubernetes.io/name=redis --timeout=300s
@@ -57,6 +58,10 @@ global:
     host: gitlab-redis-master
     password:
       enabled: false
+    livenessProbe:
+      initialDelaySeconds: 120
+    readinessProbe:
+      initialDelaySeconds: 120
   appConfig:
     lfs:
       enabled: false

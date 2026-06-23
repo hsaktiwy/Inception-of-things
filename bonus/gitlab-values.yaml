@@ -18,6 +18,10 @@ global:
     host: gitlab-redis-master
     password:
       enabled: false
+    livenessProbe:
+      initialDelaySeconds: 120
+    readinessProbe:
+      initialDelaySeconds: 120
   appConfig:
     lfs:
       enabled: false
@@ -85,4 +89,5 @@ gitlab:
     persistence:
       enabled: false
   gitlab-shell:
-    replicaCount: 1
+    minReplicas: 1
+    maxReplicas: 1
