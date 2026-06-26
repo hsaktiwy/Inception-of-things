@@ -1,4 +1,11 @@
 global:
+  hosts:
+    domain: localhost
+    https: false
+    gitlab:
+      name: localhost
+      https: false
+      port: 8181
   edition: ce
   ingress:
     enabled: false
@@ -48,7 +55,7 @@ spamcheck:
   enabled: false
 
 mailroom:
-  enabled: false
+    enabled: false
 
 installCertmanager: false
 
@@ -76,19 +83,19 @@ gitlab:
     maxReplicas: 1
     resources:
       requests:
-        memory: 256Mi
+        memory: 1700Mi
         cpu: 100m
       limits:
-        memory: 512Mi
+        memory: 2500Mi
   sidekiq:
     minReplicas: 1
     maxReplicas: 1
     resources:
       requests:
-        memory: 128Mi
-        cpu: 50m
+        memory: 800Mi
+        cpu: 100m
       limits:
-        memory: 256Mi
+        memory: 1200Mi
   toolbox:
     enabled: false
   gitaly:
@@ -98,15 +105,15 @@ gitlab:
       enabled: false
     resources:
       requests:
-        memory: 128Mi
-        cpu: 50m
+        memory: 208Mi
+        cpu: 100m
       limits:
-        memory: 256Mi
+        memory: 286Mi
 
   gitlab-shell:
     minReplicas: 1
     maxReplicas: 1
     resources:
       requests:
-        memory: 32Mi
-        cpu: 10m
+        memory: 200Mi
+        cpu: 100m

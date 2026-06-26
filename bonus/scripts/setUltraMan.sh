@@ -44,10 +44,10 @@ sudo helm upgrade --install gitlab gitlab/gitlab \
   --namespace gitlab \
   --timeout 1800s \
   --version 10.1.0 \
-  -f confs/gitlab-values.yaml
+  -f confs/version1.yml
 
 echo "8.1 Waiting for GitLab Webservice to stabilize (This can take up to 30 minutes on local VMs)..."
-sudo kubectl wait --namespace gitlab --for=condition=ready pod --selector=app.kubernetes.io/name=webservice --timeout=3600s
+sudo kubectl wait --namespace gitlab --for=condition=ready pod --selector=app.kubernetes.io/name=webservice --timeout=900s
 
 echo "9. Deploying ArgoCD Core Engine..."
 sudo kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
