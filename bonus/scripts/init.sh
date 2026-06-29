@@ -4,9 +4,6 @@ echo "1. Installing Docker..."
 sudo apt-get update && sudo apt-get install curl -y
 curl -fsSL https://get.docker.com | sh -
 
-# Force the current shell script execution to recognize the new docker group membership
-# without requiring a full logout/login sequence
-     
 echo "2. Installing K3d..."
 wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | TAG=v5.9.0 bash
 
